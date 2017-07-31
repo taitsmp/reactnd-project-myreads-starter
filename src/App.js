@@ -13,7 +13,18 @@ class BooksApp extends React.Component {
     showSearchPage: true
   }
 
+
+  componentDidMount() {
+    BooksAPI.getAll().then( obj => {
+      this.setState({ books: obj })
+      console.log(obj)
+    }); 
+    this.setState({ tait: 'hi' })
+  }  
+
   render() {
+    //had to print the state here not in componentDidMount()
+    console.log(this.state);
     return (
       <div className="app">
         {this.state.showSearchPage ? (
