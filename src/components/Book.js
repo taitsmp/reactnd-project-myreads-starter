@@ -33,6 +33,7 @@ class Book extends Component {
 
 }
 
+
 //leaving this outside class definition in case I change this to a propType
 Book.PropTypes = {
     title: PropTypes.string.isRequired,
