@@ -19,7 +19,7 @@ class Book extends Component {
                         <div className="book">
                           <div className="book-top">
                             <div className="book-cover" style={coverStyle}></div>
-                            <BookShelfChanger shelf={this.props.shelf} bookId={this.props.id} />
+                            <BookShelfChanger shelf={this.props.shelf} bookId={this.props.id} onUpdateBook={this.props.onUpdateBook} />
                           </div>
                           <div className="book-title">{this.props.title}</div>
                           <div className="book-authors">{this.props.author}</div>

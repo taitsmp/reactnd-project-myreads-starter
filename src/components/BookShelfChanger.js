@@ -20,7 +20,7 @@ class BookShelfChanger extends Component {
     const newShelf = event.target.value
     const id       = this.props.bookId
     
-    this.props.updateBook(id, newShelf)
+    this.props.onUpdateBook(id, newShelf)
     this.setState({value: newShelf})
   }
 
@@ -31,7 +31,7 @@ class BookShelfChanger extends Component {
   render() {
     return (
                             <div className="book-shelf-changer">
-                              <select value={this.state.value} onClick={this.handleShelfChange}>
+                              <select value={this.state.value} onChange={this.handleShelfChange}>
                                 <option value="none" disabled>Move to...</option>                  
                                 <option value="currentlyReading">Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>
