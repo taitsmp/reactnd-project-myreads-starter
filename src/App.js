@@ -5,24 +5,37 @@ import { Route } from 'react-router-dom'
 import './App.css'
 
 class BooksApp extends React.Component {
-  state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
-    books: []
+  
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showSearchPage: false,  //REMOVE ME
+      books: []
+    } 
+
+  } 
+
+  handleUpdateBook = (id, shelf) => {
+    const book = {id: id, shelf: shelf}  //hack
+    BooksAPI.update(book, shelf)
+
+    //we need to update the state using setState.  Beware of shallow copies. 
+    //you could start by refetching all the data from the server.  this is not a great idea but is doable. 
+    //
+
+    //https://facebook.github.io/react/docs/update.html
+    //newBooks = update(this.state.books, {}) //-works MUCH easier if books is not an array. 
+    //const newState = update(this.state, {books: {i {$apply: function(x) {return x * 2;}}});
+
   }
-
-
+  
   componentDidMount() {
     BooksAPI.getAll().then( obj => {
       this.setState({ books: obj })
-      //console.log(obj)
-    }); 
-    this.setState({ tait: 'hi' })
+      console.log(obj)
+    }) 
+    this.setState({ tait: "hi" })
   }  
 
   render() {
@@ -53,7 +66,7 @@ class BooksApp extends React.Component {
           </div> 
         )} />
         <Route exact path='/' render={() => (
-          <MainPage books={this.state.books} />
+          <MainPage books={this.state.books} onUpdateBook={this.handleUpdateBook} />
         )} />
        
       </div>

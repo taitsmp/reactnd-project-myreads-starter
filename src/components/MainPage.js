@@ -1,7 +1,5 @@
-/*eslint-disable no-unused-vars*/
 import React, { Component } from "react"
 import Book from "./Book"
-/*eslint-enable no-unused-vars*/
 import PropTypes from "prop-types"
 
 class MainPage extends Component {
@@ -20,7 +18,12 @@ class MainPage extends Component {
                     <ol className="books-grid">
                       {this.props.books.map( book => (
                       <li>
-                        <Book thumbnail={book.imageLinks.thumbnail} title={book.title} author={book.author} />
+                        <Book thumbnail={book.imageLinks.thumbnail} 
+                              title={book.title} 
+                              author={book.author} 
+                              shelf={book.shelf}
+                              id={book.id}
+                              onUpdateBook={this.props.onUpdateBook} />
                       </li>
                       ))}
                       <li>
@@ -177,7 +180,8 @@ class MainPage extends Component {
 }
 
 MainPage.PropTypes = {
-  books: PropTypes.array.isRequired
+  books: PropTypes.array.isRequired,
+  onUpdateBook: PropTypes.func.isRequired
 
 }
 export default MainPage
