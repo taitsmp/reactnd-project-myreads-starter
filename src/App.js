@@ -16,17 +16,37 @@ class BooksApp extends React.Component {
 
   } 
 
+  getBook(id) {
+    return this.state.books.find(b => b.id === id )
+  }
+
   handleUpdateBook = (id, shelf) => {
     const book = {id: id, shelf: shelf}  //hack
-    BooksAPI.update(book, shelf)
+    BooksAPI.update(book, shelf).then( shelves => {
+      //shelves is a object with three lists of book ids (currently reading, want to read, read)
+      console.log(shelves)
+      console.log(this.getBook(id))
+      
+      //just do reduce?  will return a new array.
+      let newBooks = this.state.books.reduce((books, b) => {
+        var book
 
-    //we need to update the state using setState.  Beware of shallow copies. 
-    //you could start by refetching all the data from the server.  this is not a great idea but is doable. 
-    //
+        console.log(books)
+        if (b.id === id) {
+          book = this.getBook(id)
+          book.shelf = shelf
+        }
+        else
+          book = b
+        
+        return [...books, book]
+      }, [])
 
-    //https://facebook.github.io/react/docs/update.html
-    //newBooks = update(this.state.books, {}) //-works MUCH easier if books is not an array. 
-    //const newState = update(this.state, {books: {i {$apply: function(x) {return x * 2;}}});
+      console.log('here' + newBooks.length)
+      this.setState({books: newBooks})
+    })
+
+
 
   }
   
