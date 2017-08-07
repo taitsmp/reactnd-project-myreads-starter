@@ -12,9 +12,6 @@ class BookShelfChanger extends Component {
     this.state = { value: this.props.shelf, id: this.props.bookId}
   }
 
-  //should I handle change here or at a higher level component?  
-  // if I do it here => 
-  // if I do it at a higher level, how do I change the state here?
 
   handleShelfChange = (event) => {
     const newShelf = event.target.value

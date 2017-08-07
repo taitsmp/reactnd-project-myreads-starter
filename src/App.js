@@ -1,8 +1,21 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import MainPage from './components/MainPage'
+import SearchPage from './components/SearchPage'
 import { Route } from 'react-router-dom'
 import './App.css'
+
+/*
+What's left?
+
+* go from page to page correctly (search to main, main to search)
+* escape your search query strying
+* rewatch the lecture on managing state and controlled components.  Did you do search right?
+* rewatch any other lectures? 
+* consider refactoring so that we just keep the books list in one place 
+* review requirements
+* Do you need to start this project over from a create-react-app?
+*/
 
 class BooksApp extends React.Component {
   
@@ -63,27 +76,8 @@ class BooksApp extends React.Component {
     console.log(this.state);
     return (
       <div className="app">
-        <Route exact path="/search" render={() => (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
-                {/* 
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-                  
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author"/>
-                
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div> 
+        <Route path="/search" render={() => (
+          <SearchPage onUpdateBook={this.handleUpdateBook} />
         )} />
         <Route exact path='/' render={() => (
           <MainPage books={this.state.books} onUpdateBook={this.handleUpdateBook} />
