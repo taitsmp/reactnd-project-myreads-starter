@@ -1,4 +1,6 @@
 {
+  "name": "my-books",
+  "version": "0.0.1",
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
     "prop-types": "^15.5.8",
@@ -12,6 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "clean": "rm -rf node_modules/",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
