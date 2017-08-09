@@ -27,7 +27,6 @@ class Book extends Component {
     )
   }
         
-
 }
 
 

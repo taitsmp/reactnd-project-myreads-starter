@@ -8,13 +8,15 @@ import './App.css'
 /*
 What's left?
 
-* go from page to page correctly (search to main, main to search)
-* escape your search query strying
 * rewatch the lecture on managing state and controlled components.  Did you do search right?
 * rewatch any other lectures? 
 * consider refactoring so that we just keep the books list in one place 
 * review requirements
+* I occassionally get a 403 forbidden from the backend.  How best to structure code to handle this? - https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
 * Do you need to start this project over from a create-react-app?
+* read "thinking in react" and see if you "get it".
+* remove the constructor on this page.
+* rewrite this in react native.  
 */
 
 class BooksApp extends React.Component {
@@ -23,7 +25,6 @@ class BooksApp extends React.Component {
     super(props)
 
     this.state = {
-      showSearchPage: false,  //REMOVE ME
       books: []
     } 
 
