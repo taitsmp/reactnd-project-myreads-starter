@@ -12,6 +12,15 @@ const headers = {
   'Authorization': token
 }
 
+const testRequestOK = res => {
+  if (!res.ok) {
+    let err = new Error(res.statusText)
+    err.status = res.status
+    throw err
+  }
+  return res
+}
+
 export const get = (bookId) =>
   fetch(`${api}/books/${bookId}`, { headers })
     .then(res => res.json())
@@ -19,6 +28,7 @@ export const get = (bookId) =>
 
 export const getAll = () =>
   fetch(`${api}/books`, { headers })
+    .then(testRequestOK)
     .then(res => res.json())
     .then(data => data.books)
 
