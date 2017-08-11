@@ -8,17 +8,15 @@ import './App.css'
 /*
 What's left?
 
-* rewatch the lecture on managing state and controlled components.  Did you do search right?
-* rewatch any other lectures? 
+* rewatch any lectures? 
 * consider refactoring so that we just keep the books list in one place 
 * review requirements
 * you have a function to test if a network error occurred and a catch handler. Can you use these to dectect an error and render an error message to the screen?
 * I occassionally get a 403 forbidden from the backend.  How best to structure code to handle this? - https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
-* Do you need to start this project over from a create-react-app?
 * read "thinking in react" and see if you "get it".
 * remove the constructor on this page.
 * rewrite this in react native.  
-* rewrite up the architecture. 
+* rewrite up the architecture in README.md
 */
 
 class BooksApp extends React.Component {
@@ -36,6 +34,10 @@ class BooksApp extends React.Component {
     return this.state.books.find(b => b.id === id )
   }
 
+  /*
+  This function used by MainPage and SearchPage.  It updates the book on the server.  
+  It also updates the state of books in app which is only used by the main page. 
+  */
   handleUpdateBook = (id, shelf) => {
     const book = {id: id, shelf: shelf}  //hack
     BooksAPI.update(book, shelf).then( shelves => {
@@ -60,8 +62,6 @@ class BooksApp extends React.Component {
           console.log(err)
       })
       
-
-      console.log('here' + newBooks.length)
       this.setState({books: newBooks})
     })
 
