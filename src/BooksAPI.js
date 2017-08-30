@@ -14,6 +14,8 @@ const headers = {
 
 const testRequestOK = res => {
   if (!res.ok) {
+    console.log("TRO caught error")
+    console.log(res)
     let err = new Error(res.statusText)
     err.status = res.status
     throw err
@@ -23,12 +25,13 @@ const testRequestOK = res => {
 
 export const get = (bookId) =>
   fetch(`${api}/books/${bookId}`, { headers })
+    .then(testRequestOK)  
     .then(res => res.json())
     .then(data => data.book)
 
 export const getAll = () =>
   fetch(`${api}/books`, { headers })
-    .then(testRequestOK)
+    .then(testRequestOK)  
     .then(res => res.json())
     .then(data => data.books)
 
@@ -40,7 +43,9 @@ export const update = (book, shelf) =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ shelf })
-  }).then(res => res.json())
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
 
 export const search = (query, maxResults) =>
   fetch(`${api}/search`, {
@@ -50,5 +55,7 @@ export const search = (query, maxResults) =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ query, maxResults })
-  }).then(res => res.json())
+  })
+    .then(testRequestOK)
+    .then(res => res.json())
     .then(data => data.books)

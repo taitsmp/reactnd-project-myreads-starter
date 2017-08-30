@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Book from './Book'
 
-class SearchInput extends Component {
+class SearchResults extends Component {
 
     render() {
 
@@ -25,4 +25,4 @@ class SearchInput extends Component {
 
 }
 
-export default SearchInput
+export default SearchResults

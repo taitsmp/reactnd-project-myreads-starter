@@ -2,7 +2,6 @@
   "name": "my-books",
   "version": "0.0.1",
   "dependencies": {
-    "escape-string-regexp": "^1.0.5",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

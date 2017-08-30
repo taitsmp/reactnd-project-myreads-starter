@@ -8,12 +8,15 @@ import './App.css'
 /*
 What's left?
 
+* search does not give you the shelf.  You need to populate it (including not checking anything? this would be "none")
+* handleUpdateBook is not setup to take a new book and add it the existing set of books.  Fix the "reduce"
+* review promises lecture.  avoid tower of doom. 
+
 * rewatch any lectures? 
-* consider refactoring so that we just keep the books list in one place 
 * review requirements
-* you have a function to test if a network error occurred and a catch handler. Can you use these to dectect an error and render an error message to the screen?
-* I occassionally get a 403 forbidden from the backend.  How best to structure code to handle this? - https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
+* why can't I set a new property on an Error object? Property gone when I throw it.
 * read "thinking in react" and see if you "get it".
+* 403 happens on some searches (including "b").  Do I care?
 * remove the constructor on this page.
 * rewrite this in react native.  
 * rewrite up the architecture in README.md
@@ -31,7 +34,13 @@ class BooksApp extends React.Component {
   } 
 
   getBook(id) {
-    return this.state.books.find(b => b.id === id )
+    let bk = ""
+    BooksAPI.get(id).then(book => {
+      bk = book
+      console.log(book)
+    })
+    return bk
+    //return this.state.books.find(b => b.id === id )
   }
 
   /*
@@ -39,17 +48,23 @@ class BooksApp extends React.Component {
   It also updates the state of books in app which is only used by the main page. 
   */
   handleUpdateBook = (id, shelf) => {
-    const book = {id: id, shelf: shelf}  //hack
-    BooksAPI.update(book, shelf).then( shelves => {
+    //this looks really ugly.  
+    BooksAPI.get(id).then(book => {
+      console.log("the book")
+      console.log(book)
+      console.log("the shelf")
+      console.log(shelf)
+      BooksAPI.update(book, shelf).then( shelves => {
       //shelves is a object with three lists of book ids (currently reading, want to read, read)
       console.log(shelves)
-      console.log(this.getBook(id))
+      console.log("here is the about-to-update book")
+      console.log(book)
       
       //just do reduce?  will return a new array.
       let newBooks = this.state.books.reduce((books, b) => {
         var book
 
-        console.log(books)
+        //console.log(books)
         if (b.id === id) {
           book = this.getBook(id)
           book.shelf = shelf
@@ -58,12 +73,15 @@ class BooksApp extends React.Component {
           book = b
         
         return [...books, book]
-      }, []).catch(err => {
-          console.log(err)
-      })
+      }, [])
       
+
+      console.log("setting state")
       this.setState({books: newBooks})
+    }).catch(err => {
+      console.log("error" + err)
     })
+  })
 
 
 

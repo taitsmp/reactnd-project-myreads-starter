@@ -5,10 +5,9 @@ import * as BooksAPI from '../BooksAPI'
 
 class SearchPage extends Component {
 
-    //is this dumb? Should we have just one state of books in the app section?
     state = {
         query: '',
-        books: [],
+        books: [], //search books and my books are different things.
         calls: {search: 0, input: 0}
 
     }
@@ -25,6 +24,9 @@ class SearchPage extends Component {
             else
                 this.setState({books: foundBooks})
             this.state.calls.search++
+        }).catch(err => {
+            //silently fails on network error. Acts like broken search.
+            this.setState({books: []}) 
         })
         
         this.setState({query: newQuery})
@@ -37,7 +39,7 @@ class SearchPage extends Component {
         return (
           <div className="search-books">
             <SearchInput query={this.state.query} onSearchChange={this.updateSearch} />
-            <SearchResults books={this.state.books} onBookUpdate={this.props.onBookUpdate} />
+            <SearchResults books={this.state.books} onUpdateBook={this.props.onUpdateBook} />
           </div> 
         )
     }
