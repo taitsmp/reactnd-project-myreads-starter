@@ -10,7 +10,7 @@ What's left?
 
 * search does not give you the shelf.  You need to populate it (including not checking anything? this would be "none")
 * handleUpdateBook is not setup to take a new book and add it the existing set of books.  Fix the "reduce"
-* review promises lecture.  avoid tower of doom. 
+* review promises lecture.  avoid pyramid of doom. Might be able to use outer block book variable to pass the book between then calls. 
 
 * rewatch any lectures? 
 * review requirements
@@ -43,39 +43,74 @@ class BooksApp extends React.Component {
     //return this.state.books.find(b => b.id === id )
   }
 
+  handleUpdateBook = (id, newShelf) => {
+    
+    let book = undefined
+    BooksAPI.get(id)
+      .then(bk => {
+        book = bk
+        return BooksAPI.update(book, newShelf)
+      }) //can I do this? Does this automatically return the promise? 
+      .then(shelves => { 
+        
+        console.log("after update")
+        let books = [...this.state.books]
+
+        if (newShelf === 'none')
+        {
+          book.shelf = newShelf
+          books.unshift(book)
+        }
+        else
+        {
+          //reduce here? Don't want to accidentally update the state in place. probably fine. 
+          for (let b of books) {
+            if (b.id === id) {
+              b.shelf = newShelf
+            }
+          }
+        }
+
+        this.setState({books: books})
+
+      })
+        //add catch here...
+        
+         
+  }
   /*
   This function used by MainPage and SearchPage.  It updates the book on the server.  
   It also updates the state of books in app which is only used by the main page. 
   */
-  handleUpdateBook = (id, shelf) => {
+  handleUpdateBook2 = (id, shelf) => {
+
     //this looks really ugly.  
     BooksAPI.get(id).then(book => {
-      console.log("the book")
-      console.log(book)
-      console.log("the shelf")
-      console.log(shelf)
       BooksAPI.update(book, shelf).then( shelves => {
       //shelves is a object with three lists of book ids (currently reading, want to read, read)
       console.log(shelves)
       console.log("here is the about-to-update book")
       console.log(book)
       
-      //just do reduce?  will return a new array.
-      let newBooks = this.state.books.reduce((books, b) => {
-        var book
-
-        //console.log(books)
-        if (b.id === id) {
-          book = this.getBook(id)
-          book.shelf = shelf
-        }
-        else
-          book = b
-        
-        return [...books, book]
-      }, [])
+      const oldShelf = book.shelf
+      console.log(oldShelf)
+      book.shelf = shelf
       
+      let newBooks = [...this.state.books] //copy books
+      if (oldShelf === 'none') {
+        newBooks.unshift(book)
+      }
+      else
+      {
+        //just do reduce?  will return a new array.
+        newBooks = newBooks.reduce((books, b) => {
+    
+            let nextBook = b.id === book.id ? book : b
+            //console.log(books)
+            return [...books, nextBook]
+          }, [])
 
+      }
       console.log("setting state")
       this.setState({books: newBooks})
     }).catch(err => {
@@ -105,7 +140,7 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         <Route path="/search" render={() => (
-          <SearchPage onUpdateBook={this.handleUpdateBook} />
+          <SearchPage mybooks={this.state.books} onUpdateBook={this.handleUpdateBook} />
         )} />
         <Route exact path='/' render={() => (
           <MainPage books={this.state.books} onUpdateBook={this.handleUpdateBook} />

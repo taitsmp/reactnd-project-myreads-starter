@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import SearchInput from './SearchInput'
 import SearchResults from './SearchResults'
 import * as BooksAPI from '../BooksAPI'
@@ -14,6 +15,7 @@ class SearchPage extends Component {
 
     updateSearch = (event) => {
         //let { query, books } = this.state
+        const { mybooks } = this.props
 
         let newQuery = event.target.value.trim()
         
@@ -21,8 +23,18 @@ class SearchPage extends Component {
             console.log(foundBooks)
             if (foundBooks.error)
                 this.setState({books: []})
-            else
+            else {
+                //set shelf using mybooks
+                for (let bk of foundBooks) {
+                    let myBook = mybooks.find( mb => mb.id === bk.id )
+                    if (myBook) {
+                        bk.shelf = myBook.shelf
+                    }
+                    else
+                        bk.shelf = 'none'
+                }
                 this.setState({books: foundBooks})
+            }
             this.state.calls.search++
         }).catch(err => {
             //silently fails on network error. Acts like broken search.
@@ -45,5 +57,11 @@ class SearchPage extends Component {
     }
 
 }
+
+SearchPage.PropTypes = {
+    shelf: PropTypes.string.isRequired,
+    mybooks: PropTypes.any.isRequired,
+    onUpdateBook: PropTypes.func.isRequired
+  }
 
 export default SearchPage
