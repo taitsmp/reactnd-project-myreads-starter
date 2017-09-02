@@ -8,9 +8,17 @@ import './App.css'
 /*
 What's left?
 
-* search does not give you the shelf.  You need to populate it (including not checking anything? this would be "none")
-* handleUpdateBook is not setup to take a new book and add it the existing set of books.  Fix the "reduce"
-* review promises lecture.  avoid pyramid of doom. Might be able to use outer block book variable to pass the book between then calls. 
+* On search page, if I type three characters the dropdown state is not set correctly (for items on no shelf only)
+  - I think I try to set the state but the setState function thinks the component hasn't changed.  Won't rerender.
+  - something in bookshelfchanger sets the state wrong of the dropdown.  
+* In search page, the books shelf never gets updated in the component.  Doesn't really matter?
+* On search page, empty query does not reset the page to no results.
+
+* x - handleUpdateBook has duplicates.  Multiple of the same book in the array.
+* x - handleUpdateBook is not setup to take a new book and add it the existing set of books.  Fix the "reduce"
+* x - search does not give you the shelf.  You need to populate it (including not checking anything? this would be "none")
+* x - review promises lecture.  avoid pyramid of doom. Might be able to use outer block book variable to pass the book between then calls. 
+
 
 * rewatch any lectures? 
 * review requirements
@@ -43,46 +51,11 @@ class BooksApp extends React.Component {
     //return this.state.books.find(b => b.id === id )
   }
 
-  handleUpdateBook = (id, newShelf) => {
-    
-    let book = undefined
-    BooksAPI.get(id)
-      .then(bk => {
-        book = bk
-        return BooksAPI.update(book, newShelf)
-      }) //can I do this? Does this automatically return the promise? 
-      .then(shelves => { 
-        
-        console.log("after update")
-        let books = [...this.state.books]
-
-        if (newShelf === 'none')
-        {
-          book.shelf = newShelf
-          books.unshift(book)
-        }
-        else
-        {
-          //reduce here? Don't want to accidentally update the state in place. probably fine. 
-          for (let b of books) {
-            if (b.id === id) {
-              b.shelf = newShelf
-            }
-          }
-        }
-
-        this.setState({books: books})
-
-      })
-        //add catch here...
-        
-         
-  }
   /*
   This function used by MainPage and SearchPage.  It updates the book on the server.  
   It also updates the state of books in app which is only used by the main page. 
   */
-  handleUpdateBook2 = (id, shelf) => {
+  handleUpdateBook = (id, shelf) => {
 
     //this looks really ugly.  
     BooksAPI.get(id).then(book => {
@@ -93,15 +66,18 @@ class BooksApp extends React.Component {
       console.log(book)
       
       const oldShelf = book.shelf
-      console.log(oldShelf)
+      console.log(`${oldShelf} => ${shelf}`)
       book.shelf = shelf
       
-      let newBooks = [...this.state.books] //copy books
-      if (oldShelf === 'none') {
+      let   newBooks = [...this.state.books] //copy books
+      const found = newBooks.find(b => b.id === id)
+
+      if (!found) {
         newBooks.unshift(book)
       }
       else
       {
+        console.log("not found")
         //just do reduce?  will return a new array.
         newBooks = newBooks.reduce((books, b) => {
     

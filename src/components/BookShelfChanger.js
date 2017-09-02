@@ -8,6 +8,7 @@ class BookShelfChanger extends Component {
   constructor(props) {
     super(props)
 
+    console.log("changer constructor")
     //in the constructor is the only place you can modify state directly. 
     this.state = { value: this.props.shelf, id: this.props.bookId}
   }
@@ -22,14 +23,26 @@ class BookShelfChanger extends Component {
   }
 
   componentDidMount() {
-
+    console.log("shelf changer mounted")
   }
 
+  /* Do I need this function? Seems like no.  
+  componentWillReceiveProps(nextProps) {
+    console.log("will receive props. shelf =" + nextProps.shelf)
+    if (nextProps.shelf !== this.props.value)
+    {
+      console.log("updating state")
+      this.setState({ value: nextProps.shelf})
+    }
+  }
+  */
+
   render() {
+    console.log("shelf changer rendered. shelf=" + this.state.value)    
     return (
                             <div className="book-shelf-changer">
                               <select value={this.state.value} onChange={this.handleShelfChange}>
-                                <option value="none" disabled>Move to...</option>                  
+                                <option value="move" disabled>Move to...</option>                  
                                 <option value="currentlyReading">Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>
                                 <option value="read">Read</option>

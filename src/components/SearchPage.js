@@ -17,33 +17,44 @@ class SearchPage extends Component {
         //let { query, books } = this.state
         const { mybooks } = this.props
 
-        let newQuery = event.target.value.trim()
+        let newQuery = event.target.value
         
-        BooksAPI.search(newQuery, 100).then((foundBooks) => {
-            console.log(foundBooks)
-            if (foundBooks.error)
-                this.setState({books: []})
-            else {
-                //set shelf using mybooks
-                for (let bk of foundBooks) {
-                    let myBook = mybooks.find( mb => mb.id === bk.id )
-                    if (myBook) {
-                        bk.shelf = myBook.shelf
-                    }
-                    else
-                        bk.shelf = 'none'
+        //handle the empty query.  No results.
+        if (newQuery === '') {
+            this.setState({books: []})
+            this.state.calls.input++            
+        }
+        else {
+            BooksAPI.search(newQuery, 100).then((foundBooks) => {
+                console.log(foundBooks)
+                if (foundBooks.error) {
+                    console.log(foundBooks.error)
+                    this.setState({books: []})
                 }
-                this.setState({books: foundBooks})
-            }
-            this.state.calls.search++
-        }).catch(err => {
-            //silently fails on network error. Acts like broken search.
-            this.setState({books: []}) 
-        })
-        
+                else {
+                    //set shelf using mybooks
+                    for (let bk of foundBooks) {
+                        let myBook = mybooks.find( mb => mb.id === bk.id )
+                        if (myBook) {
+                            console.log("set shelf 1")
+                            bk.shelf = myBook.shelf
+                        }
+                        else {
+                            console.log("set shelf 2")
+                            bk.shelf = 'none'
+                        }
+                    }
+                    this.setState({books: foundBooks})
+                }
+                this.state.calls.search++
+            }).catch(err => {
+                //silently fails on network error. Acts like broken search.
+                this.setState({books: []})
+            })
+        }
+
         this.setState({query: newQuery})
         this.state.calls.input++
-        
     }
 
     render() {
@@ -59,7 +70,6 @@ class SearchPage extends Component {
 }
 
 SearchPage.PropTypes = {
-    shelf: PropTypes.string.isRequired,
     mybooks: PropTypes.any.isRequired,
     onUpdateBook: PropTypes.func.isRequired
   }

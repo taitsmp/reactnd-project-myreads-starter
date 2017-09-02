@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Book from './Book'
+import PropTypes from 'prop-types'
 
 class SearchResults extends Component {
 
@@ -24,5 +25,10 @@ class SearchResults extends Component {
     }
 
 }
+
+SearchResults.PropTypes = {
+    books: PropTypes.any.isRequired,
+    onUpdateBook: PropTypes.func.isRequired
+  }
 
 export default SearchResults
