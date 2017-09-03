@@ -13,6 +13,27 @@ class SearchPage extends Component {
 
     }
 
+    componentWillReceiveProps = (nextProps) => {
+        let m1 = JSON.stringify(nextProps.mybooks)
+        let m2 = JSON.stringify(this.props.mybooks)
+
+        //TODO: try deepEqual
+        if (m1 !== m2) {
+            this.setState({ books: this.combineSearches(nextProps.mybooks, this.state.books)})
+        }
+
+    }
+
+    //add mybooks data into searchBooks
+    combineSearches = (mybooks, searchBooks) => {
+        //props could uppdate state but won't initialize state. 
+        for (let bk of searchBooks) {
+            let myBook = mybooks.find( mb => mb.id === bk.id )
+            bk.shelf = myBook ? myBook.shelf : 'none'
+        }
+        return searchBooks
+    }
+
     updateSearch = (event) => {
         //let { query, books } = this.state
         const { mybooks } = this.props
@@ -32,19 +53,8 @@ class SearchPage extends Component {
                     this.setState({books: []})
                 }
                 else {
-                    //set shelf using mybooks
-                    for (let bk of foundBooks) {
-                        let myBook = mybooks.find( mb => mb.id === bk.id )
-                        if (myBook) {
-                            console.log("set shelf 1")
-                            bk.shelf = myBook.shelf
-                        }
-                        else {
-                            console.log("set shelf 2")
-                            bk.shelf = 'none'
-                        }
-                    }
-                    this.setState({books: foundBooks})
+                    let books = this.combineSearches(mybooks, foundBooks)
+                    this.setState({books: books})
                 }
                 this.state.calls.search++
             }).catch(err => {
@@ -62,7 +72,7 @@ class SearchPage extends Component {
         return (
           <div className="search-books">
             <SearchInput query={this.state.query} onSearchChange={this.updateSearch} />
-            <SearchResults books={this.state.books} onUpdateBook={this.props.onUpdateBook} />
+            <SearchResults books={this.state.books} mybooks={this.props.mybooks} onUpdateBook={this.props.onUpdateBook} />
           </div> 
         )
     }

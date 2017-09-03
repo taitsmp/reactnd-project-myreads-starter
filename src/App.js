@@ -8,17 +8,25 @@ import './App.css'
 /*
 What's left?
 
-* On search page, if I type three characters the dropdown state is not set correctly (for items on no shelf only)
-  - I think I try to set the state but the setState function thinks the component hasn't changed.  Won't rerender.
-  - something in bookshelfchanger sets the state wrong of the dropdown.  
-* In search page, the books shelf never gets updated in the component.  Doesn't really matter?
-* On search page, empty query does not reset the page to no results.
+* As currently architected we have mybooks and books in SearchPage.  Search Results takes the books state not the mybooks props. 
+  Updating mybooks props won't get passed to SearchResults and eventually to BookShelfChanger. If the props passed to SearchProps changed this would work. 
+  - just pass mybooks to searchResults?
+* the use of initializing state with props in BookShelfChanger is an anti-pattern. (sort of)
 
+* x - In search page, the books shelf never gets updated in the component.  Doesn't really matter?
+* x - On search page, empty query does not reset the page to no results.
+* x - On search page, if I type three characters the dropdown state is not set correctly (for items on no shelf only)
+  - I think I try to set the state but the setState function thinks the component hasn't changed.  Won't rerender.
+  - something in bookshelfchanger sets the state wrong of the dropdown. 
 * x - handleUpdateBook has duplicates.  Multiple of the same book in the array.
 * x - handleUpdateBook is not setup to take a new book and add it the existing set of books.  Fix the "reduce"
 * x - search does not give you the shelf.  You need to populate it (including not checking anything? this would be "none")
 * x - review promises lecture.  avoid pyramid of doom. Might be able to use outer block book variable to pass the book between then calls. 
 
+NOTES:
+
+* using props to seed the initial state is an anti-pattern.  Try to avoid it. 
+* both state and prop changes cause rerenders
 
 * rewatch any lectures? 
 * review requirements
