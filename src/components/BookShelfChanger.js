@@ -8,7 +8,6 @@ class BookShelfChanger extends Component {
     const id       = this.props.bookId
     
     this.props.onUpdateBook(id, newShelf)
-    //this.setState({value: newShelf})
   }
 
   render() {

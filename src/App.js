@@ -7,14 +7,9 @@ import './App.css'
 
 class BooksApp extends React.Component {
   
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      books: []
-    } 
-
-  } 
+  state = {
+    books: []
+  }
 
   /*
   This function used by MainPage and SearchPage.  It updates the book on the server.  
@@ -23,33 +18,30 @@ class BooksApp extends React.Component {
   handleUpdateBook = (id, shelf) => {
 
     //this looks really ugly.  
-    BooksAPI.get(id).then(book => {
-      book.shelf = shelf      
-      BooksAPI.update(book, shelf).then( shelves => {
-      //shelves is a object with three lists of book ids (currently reading, want to read, read)
-      
-      let   newBooks = [...this.state.books] //copy books
-      const found = newBooks.find(b => b.id === id)
+      BooksAPI.get(id).then(book => {
+        book.shelf = shelf      
+        BooksAPI.update(book, shelf).then( shelves => {
+        //shelves is a object with three lists of book ids (currently reading, want to read, read)
+        
+        let   newBooks = [...this.state.books] //copy books
+        const found = newBooks.find(b => b.id === id)
 
-      if (!found) {
-        newBooks.unshift(book)
-      }
-      else
-      {
-        newBooks = newBooks.reduce((books, b) => {
-            let nextBook = b.id === book.id ? book : b
-            return [...books, nextBook]
-          }, [])
+        if (!found) {
+          newBooks.unshift(book)
+        }
+        else
+        {
+          newBooks = newBooks.reduce((books, b) => {
+              let nextBook = b.id === book.id ? book : b
+              return [...books, nextBook]
+            }, [])
 
-      }
-      this.setState({books: newBooks})
-    }).catch(err => {
-      console.log("error" + err)
+        }
+        this.setState({books: newBooks})
+      }).catch(err => {
+        console.log("error" + err)
+      })
     })
-  })
-
-
-
   }
   
   componentDidMount() {
@@ -64,7 +56,6 @@ class BooksApp extends React.Component {
   }  
 
   render() {
-    //had to print the state here not in componentDidMount()
     return (
       <div className="app">
         <Route path="/search" render={() => (
