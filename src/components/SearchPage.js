@@ -47,9 +47,7 @@ class SearchPage extends Component {
         }
         else {
             BooksAPI.search(newQuery, 100).then((foundBooks) => {
-                console.log(foundBooks)
                 if (foundBooks.error) {
-                    console.log(foundBooks.error)
                     this.setState({books: []})
                 }
                 else {
