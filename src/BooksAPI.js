@@ -14,8 +14,6 @@ const headers = {
 
 const testRequestOK = res => {
   if (!res.ok) {
-    console.log("TRO caught error")
-    console.log(res)
     let err = new Error(res.statusText)
     err.status = res.status
     throw err

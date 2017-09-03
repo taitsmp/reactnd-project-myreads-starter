@@ -55,7 +55,6 @@ class BooksApp extends React.Component {
   componentDidMount() {
     BooksAPI.getAll().then( obj => {
       this.setState({ books: obj })
-      console.log(obj)
     }).catch(err => {
         if (err instanceof TypeError)
           console.log("Network Not Present")
